@@ -1,0 +1,35 @@
+{
+  "name": "my-cash",
+  "version": "1.0.0",
+  "description": "Aplikasi **Point of Sale** berbasis web sederhana. Semua data tersimpan di `localStorage` browser.",
+  "main": "index.js",
+  "scripts": {
+    "sync:www": "node scripts/sync-www.mjs",
+    "build": "bash scripts/build-apk.sh",
+    "server": "node server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mechaaicom-sudo/BOT.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/mechaaicom-sudo/BOT/issues"
+  },
+  "homepage": "https://github.com/mechaaicom-sudo/BOT#readme",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capgo/capacitor-printer": "^8.1.4",
+    "jsdom": "^30.1.1",
+    "puppeteer-core": "^25.12.0"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

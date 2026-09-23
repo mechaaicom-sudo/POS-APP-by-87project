@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kasir Pro</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ LOGIN VIEW ============ -->
+<div id="login-view" class="login-view hidden">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    </div>
+    <h1 data-i18n="app.title">Kasir Pro</h1>
+    <p class="login-sub" data-i18n="login.subtitle">Aplikasi kasir untuk toko Anda</p>
+    <form id="login-form" autocomplete="off">
+      <label class="field">
+        <span data-i18n="login.username">Nama pengguna</span>
+        <input id="login-username" name="username" required>
+      </label>
+      <label class="field">
+        <span data-i18n="login.password">Kata sandi</span>
+        <input id="login-password" name="password" type="password" required>
+      </label>
+      <div id="login-error" class="login-error hidden"></div>
+      <button type="submit" class="btn btn-primary btn-block" data-i18n="login.button">Masuk</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ APP SHELL ============ -->
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span id="brand-name">Kasir Pro</span>
+    </div>
+
+    <nav id="main-nav" class="main-nav">
+      <button class="nav-item active" data-view="dashboard">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+        <span data-i18n="nav.dashboard">Dashboard</span>
+      </button>
+      <button class="nav-item" data-view="cashier">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h11l2 4H4l2-4Z"/><path d="M4 15h13"/><path d="M5 7V4h14v3"/><path d="M6 9v5"/><path d="M17 9v5"/><path d="m4.5 15.5 1.5 4h12l1.5-4"/></svg>
+        <span data-i18n="nav.cashier">Kasir</span>
+      </button>
+      <button class="nav-item" data-view="products">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        <span data-i18n="nav.products">Produk</span>
+      </button>
+      <button class="nav-item" data-view="history">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span data-i18n="nav.history">Riwayat</span>
+      </button>
+      <button class="nav-item" data-view="reports">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span data-i18n="nav.reports">Laporan</span>
+      </button>
+      <button class="nav-item hidden" data-view="settings" id="nav-settings">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span data-i18n="nav.settings">Pengaturan</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="user-avatar">A</div>
+        <div class="user-meta">
+          <strong id="user-name">Admin</strong>
+          <span id="user-role">admin</span>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-block" id="btn-logout">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        <span data-i18n="logout">Keluar</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h2 id="page-title">Dashboard</h2>
+      <div class="topbar-actions">
+        <select id="lang-select" class="select">
+          <option value="id">Bahasa Indonesia</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- ===== DASHBOARD ===== -->
+      <section id="page-dashboard" class="page">
+        <div class="stats-grid" id="dash-stats"></div>
+        <div class="dash-grid">
+          <div class="card" id="dash-top"></div>
+          <div class="card" id="dash-low"></div>
+          <div class="card" id="dash-recent"></div>
+        </div>
+      </section>
+
+      <!-- ===== CASHIER ===== -->
+      <section id="page-cashier" class="page hidden">
+        <div class="cashier-layout">
+          <div class="cashier-left">
+            <div class="cashier-toolbar">
+              <input id="cs-search" class="input" type="search" data-i18n-placeholder="cash.search" placeholder="Cari produk...">
+              <select id="cs-category" class="select"></select>
+            </div>
+            <div id="cs-products" class="product-grid"></div>
+          </div>
+          <div class="cashier-right card">
+            <div id="cs-cart"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== PRODUCTS ===== -->
+      <section id="page-products" class="page hidden">
+        <div class="card">
+          <div class="toolbar">
+            <input id="prod-search" class="input" type="search" data-i18n-placeholder="product.search" placeholder="Cari produk...">
+            <select id="prod-category" class="select"></select>
+            <button class="btn btn-primary" id="btn-add-product">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span data-i18n="product.add">Tambah Produk</span>
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="product.name">Nama</th>
+                  <th data-i18n="product.category">Kategori</th>
+                  <th class="num" data-i18n="product.price">Harga</th>
+                  <th class="num" data-i18n="product.stock">Stok</th>
+                  <th class="num" data-i18n="product.actions">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="products-tbody"></tbody>
+            </table>
+            <div id="products-empty" class="empty hidden" data-i18n="product.empty">Belum ada produk</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== HISTORY ===== -->
+      <section id="page-history" class="page hidden">
+        <div class="card">
+          <div class="toolbar">
+            <input id="his-search" class="input" type="search" data-i18n-placeholder="his.search" placeholder="Cari transaksi (ID, kasir)...">
+            <button class="btn btn-secondary" id="btn-clear-filter">
+              <span data-i18n="his.clear">Reset</span>
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="his.no">No.</th>
+                  <th data-i18n="his.id">ID Transaksi</th>
+                  <th data-i18n="his.date">Waktu</th>
+                  <th data-i18n="his.cashier">Kasir</th>
+                  <th class="num" data-i18n="his.items">Item</th>
+                  <th class="num" data-i18n="his.total">Total</th>
+                  <th class="num" data-i18n="his.actions">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="history-tbody"></tbody>
+            </table>
+            <div id="history-empty" class="empty hidden" data-i18n="his.empty">Belum ada transaksi</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== REPORTS ===== -->
+      <section id="page-reports" class="page hidden">
+        <div class="stats-grid" id="rep-stats"></div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="rep.kasir">Kasir</th>
+                  <th data-i18n="rep.start">Mulai</th>
+                  <th data-i18n="rep.end">Selesai</th>
+                  <th data-i18n="rep.duration">Durasi</th>
+                  <th class="num" data-i18n="rep.trxCount">Transaksi</th>
+                  <th class="num" data-i18n="rep.total">Total</th>
+                  <th class="num" data-i18n="common.actions">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="reports-tbody"></tbody>
+            </table>
+            <div id="reports-empty" class="empty hidden"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SETTINGS ===== -->
+      <section id="page-settings" class="page hidden">
+        <div class="card">
+          <h3 class="card-title" data-i18n="set.store">Informasi Toko</h3>
+          <div class="form-grid">
+            <label class="field">
+              <span data-i18n="set.storeName">Nama toko</span>
+              <input id="set-store-name" class="input">
+            </label>
+            <label class="field">
+              <span data-i18n="set.storeAddress">Alamat toko</span>
+              <input id="set-store-address" class="input">
+            </label>
+            <label class="field">
+              <span data-i18n="set.language">Bahasa antarmuka</span>
+              <select id="set-language" class="select">
+                <option value="id">Bahasa Indonesia</option>
+                <option value="en">English</option>
+              </select>
+            </label>
+          </div>
+          <button class="btn btn-primary" id="btn-save-store">
+            <span data-i18n="set.saveStore">Simpan</span>
+          </button>
+        </div>
+
+        <!-- ===== BLUETOOTH PRINTER ===== -->
+        <div class="card" id="bt-card">
+          <div class="card-head">
+            <h3 class="card-title" data-i18n="set.btTitle">Printer Bluetooth (ESC/POS)</h3>
+          </div>
+          <div class="field">
+            <span data-i18n="set.btDevices">Perangkat terpasang</span>
+            <div class="row gap">
+              <select id="bt-device" class="select" style="flex:1"></select>
+              <button class="btn btn-secondary" id="btn-bt-refresh" style="white-space:nowrap">
+                <span data-i18n="set.btRefresh">Muat Ulang</span>
+              </button>
+            </div>
+          </div>
+          <div class="row gap" style="margin-top:10px">
+            <button class="btn btn-primary" id="btn-bt-save" style="flex:1">
+              <span data-i18n="set.btSave">Simpan Printer</span>
+            </button>
+            <button class="btn btn-secondary" id="btn-bt-test">
+              <span data-i18n="set.btTest">Cetak Uji</span>
+            </button>
+          </div>
+          <p class="muted" id="bt-state" style="margin-top:8px"></p>
+        </div>
+
+        <!-- ===== SYNC ===== -->
+        <div class="card" id="sync-card">
+          <div class="card-head">
+            <h3 class="card-title" data-i18n="set.syncTitle">Sinkronisasi Data</h3>
+          </div>
+          <label class="field">
+            <span data-i18n="set.syncUrl">Alamat server (URL)</span>
+            <input id="sync-url" class="input" placeholder="http://192.168.1.10:3000">
+          </label>
+          <div class="form-grid">
+            <label class="field">
+              <span data-i18n="set.syncUser">Nama pengguna</span>
+              <input id="sync-user" class="input" autocomplete="username">
+            </label>
+            <label class="field">
+              <span data-i18n="set.syncPass">Kata sandi</span>
+              <input id="sync-pass" class="input" type="password" autocomplete="current-password">
+            </label>
+          </div>
+          <div class="row gap" style="margin-top:10px">
+            <button class="btn btn-primary" id="btn-sync-connect" style="flex:1">
+              <span data-i18n="set.syncConnect">Hubungkan & Sinkronkan</span>
+            </button>
+            <button class="btn btn-secondary" id="btn-sync-disconnect">
+              <span data-i18n="set.syncDisconnect">Putuskan</span>
+            </button>
+          </div>
+          <p class="muted" id="sync-state" style="margin-top:8px"></p>
+        <div class="card" id="training-card">
+          <div class="card-head">
+            <h3 class="card-title">🅿️ <span data-i18n="train.title">Mode Pelatihan</span></h3>
+            <label class="switch" title="Aktifkan untuk latihan kasir tanpa mengganggu laporan toko">
+              <input type="checkbox" id="train-toggle">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+          <p class="muted">… <span data-i18n="train.hint">Transaksi pelatihan ditandai 🅿️ & tidak memengaruhi laporan toko.</span></p>
+          <p class="muted" id="train-state" style="margin-top:6px"></p>
+        </div>
+
+        <div class="card hidden" id="users-card">
+          <div class="card-head">
+            <h3 class="card-title" data-i18n="set.users">Manajemen Pengguna</h3>
+            <button class="btn btn-primary btn-sm" id="btn-add-user">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span data-i18n="set.addUser">Tambah Pengguna</span>
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="set.username">Nama pengguna</th>
+                  <th data-i18n="set.displayName">Nama</th>
+                  <th data-i18n="set.role">Peran</th>
+                  <th class="num" data-i18n="product.actions">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card danger-zone">
+          <h3 class="card-title" data-i18n="set.danger">Zona Berbahaya</h3>
+          <p class="muted" data-i18n="set.dangerHint">Menghapus seluruh data produk, transaksi, dan pengaturan.</p>
+          <button class="btn btn-danger" id="btn-reset-data">
+            <span data-i18n="set.resetData">Hapus Semua Data</span>
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast-root"></div>
+<div id="print-area"></div>
+
+<script src="js/i18n.js"></script>
+<script src="js/db.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/receipt.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cashier.js"></script>
+<script src="js/history.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/reports.js"></script>
+<script src="js/bluetooth.js"></script>
+<script src="js/sync.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

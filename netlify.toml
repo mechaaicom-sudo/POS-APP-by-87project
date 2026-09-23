@@ -1,0 +1,16 @@
+# ============================================================
+# netlify.toml — Kasir Pro (web, high reach)
+# Deploy: npx netlify deploy --dir www --prod
+# ============================================================
+[build]
+  publish = "www"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# localStorage + file-based app → tidak butuh SPA fallback,
+# karena semua masuk lewat index.html langsung.

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Kasir Pro</string>
+    <string name="title_activity_main">Kasir Pro</string>
+    <string name="package_name">com.kasirpro.pos</string>
+    <string name="custom_url_scheme">com.kasirpro.pos</string>
+</resources>
