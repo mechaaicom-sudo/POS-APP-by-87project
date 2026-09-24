@@ -26,6 +26,7 @@ const DB = {
     if (!s.storeName) s.storeName = I18n.t('app.name');
     if (!s.storeAddress) s.storeAddress = '';
     if (!s.lang) s.lang = 'id';
+    if (!s.theme) s.theme = 'dark';
     if (!s.seq) s.seq = 0;
     if (!s.updatedAt) s.updatedAt = Date.now();
     return s;

@@ -18,6 +18,7 @@ const App = {
     document.documentElement.lang = I18n.lang;
     document.getElementById('lang-select').value = I18n.lang;
     document.getElementById('brand-name').textContent = DB.settings().storeName || I18n.t('app.name');
+    this.applyTheme();
 
     this.bindGlobal();
 
@@ -124,6 +125,15 @@ const App = {
     const user = Auth.current();
     if (user) document.getElementById('user-role').textContent = I18n.t('role.' + user.role);
     this.show(this.currentView);
+  },
+
+  /* Terapkan tema (dark = futuristik / light = terang) ke <html> */
+  applyTheme() {
+    const theme = DB.settings().theme || 'dark';
+    document.documentElement.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+    const themeColor = theme === 'light' ? '#f1f5f9' : '#050816';
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', themeColor);
   }
 };
 

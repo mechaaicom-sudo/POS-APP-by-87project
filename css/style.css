@@ -907,3 +907,178 @@ tbody tr:hover { background: rgba(34, 211, 238, .06); }
   body { margin: 0; padding: 0; }
   .modal-foot { position: static; background: none; }
 }
+/* ============================================================
+   LIGHT THEME — override saat <html data-theme="light">
+   ============================================================ */
+html[data-theme="light"] {
+  --bg: #eef2f7;
+  --surface: rgba(255, 255, 255, .85);
+  --surface-solid: #ffffff;
+  --border: #dbe4f0;
+  --border-dark: #c3cfdf;
+  --text: #0f172a;
+  --muted: #5b6b84;
+  --primary: #0891b2;
+  --primary-dark: #0e7490;
+  --primary-light: rgba(8, 145, 178, .12);
+  --success: #059669;
+  --success-light: rgba(5, 150, 105, .12);
+  --danger: #dc2626;
+  --danger-light: rgba(220, 38, 38, .1);
+  --warning: #d97706;
+  --warning-light: rgba(217, 119, 6, .12);
+  --sidebar-bg: #0f1b33;
+  --sidebar-text: #b6c6e2;
+  --sidebar-active: #155e75;
+  --shadow: 0 6px 22px rgba(15, 23, 42, .1);
+  --shadow-lg: 0 16px 44px rgba(15, 23, 42, .16);
+  --neon-cyan: rgba(8, 145, 178, .4);
+  --neon-purple: rgba(124, 58, 237, .35);
+  --grad-primary: linear-gradient(135deg, #0891b2 0%, #0284c7 45%, #7c3aed 100%);
+}
+
+html[data-theme="light"] body {
+  background:
+    radial-gradient(900px 420px at 12% -8%, rgba(8, 145, 178, .1), transparent 60%),
+    radial-gradient(760px 420px at 96% 8%, rgba(124, 58, 237, .1), transparent 60%),
+    linear-gradient(180deg, #eef2f7, #f6f8fb);
+}
+html[data-theme="light"] body::before {
+  background-image:
+    linear-gradient(rgba(8, 145, 178, .05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8, 145, 178, .05) 1px, transparent 1px);
+}
+
+/* futuristik: semua teks gradien kembali solid pada tema terang */
+html[data-theme="light"] .login-card h1,
+html[data-theme="light"] .topbar h2,
+html[data-theme="light"] .stat-value,
+html[data-theme="light"] .product-card .p-price,
+html[data-theme="light"] .ct-row.grand .value,
+html[data-theme="light"] .checkout-rows .ct-row.grand .value,
+html[data-theme="light"] .big-total {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  -webkit-text-fill-color: initial;
+  color: var(--primary);
+  font-family: inherit;
+}
+
+/* login */
+html[data-theme="light"] .login-view {
+  background:
+    radial-gradient(700px 420px at 22% 18%, rgba(8, 145, 178, .12), transparent 62%),
+    radial-gradient(620px 420px at 84% 22%, rgba(124, 58, 237, .12), transparent 62%),
+    linear-gradient(160deg, #eaf2f9, #f4f6fb);
+}
+html[data-theme="light"] .login-view::before { background: #0ea5e9; opacity: .3; }
+html[data-theme="light"] .login-view::after { background: #a855f7; opacity: .28; }
+html[data-theme="light"] .login-card {
+  background: rgba(255, 255, 255, .82);
+  border-color: rgba(148, 163, 184, .3);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, .14), inset 0 1px 0 #fff;
+}
+html[data-theme="light"] .login-hint { background: rgba(148, 163, 184, .12); }
+html[data-theme="light"] .login-hint code { background: rgba(8, 145, 178, .12); color: #0e7490; }
+
+/* inputs */
+html[data-theme="light"] .input,
+html[data-theme="light"] .select,
+html[data-theme="light"] .toolbar .input,
+html[data-theme="light"] .cashier-toolbar .input {
+  background: #fff;
+  color: var(--text);
+}
+html[data-theme="light"] .input::placeholder { color: #94a3b8; }
+
+/* buttons */
+html[data-theme="light"] .btn-primary {
+  background: linear-gradient(135deg, #0891b2, #0284c7);
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(8, 145, 178, .3);
+}
+html[data-theme="light"] .btn-primary:hover:not(:disabled) { filter: brightness(1.08); }
+html[data-theme="light"] .btn-secondary { background: #fff; }
+html[data-theme="light"] .btn-secondary:hover:not(:disabled) { background: #f1f5f9; }
+html[data-theme="light"] .btn-success { background: linear-gradient(135deg, #059669, #047857); color: #fff; }
+html[data-theme="light"] .btn-danger { background: linear-gradient(135deg, #dc2626, #b91c1c); color: #fff; }
+html[data-theme="light"] .icon-btn { background: #fff; color: #5b6b84; }
+html[data-theme="light"] .icon-btn:hover { background: var(--primary-light); }
+
+/* sidebar tetap gelap (kontras) */
+html[data-theme="light"] .sidebar { background: linear-gradient(180deg, #0f1b33, #111c34); }
+html[data-theme="light"] .brand svg { color: #22d3ee; }
+html[data-theme="light"] .nav-item:hover { background: rgba(34, 211, 238, .1); color: #cffafe; }
+html[data-theme="light"] .nav-item.active {
+  background: linear-gradient(135deg, rgba(34, 211, 238, .25), rgba(168, 85, 247, .25));
+  box-shadow: inset 0 0 0 1px rgba(34, 211, 238, .35), 0 0 18px rgba(34, 211, 238, .2);
+}
+
+/* topbar & cards */
+html[data-theme="light"] .topbar {
+  background: rgba(255, 255, 255, .8);
+  border-bottom: 1px solid rgba(148, 163, 184, .18);
+}
+html[data-theme="light"] .card {
+  background: #fff;
+  border-color: var(--border);
+  box-shadow: var(--shadow);
+  backdrop-filter: none;
+}
+html[data-theme="light"] th { color: #64748b; }
+html[data-theme="light"] th, html[data-theme="light"] td { border-bottom: 1px solid var(--border); }
+html[data-theme="light"] tbody tr:hover { background: #f0f7fb; }
+html[data-theme="light"] .dash-row { border-bottom: 1px solid var(--border); }
+
+/* badges: gunakan var light yang sudah di-set */
+html[data-theme="light"] .badge-low, html[data-theme="light"] .badge-out,
+html[data-theme="light"] .badge-ok, html[data-theme="light"] .badge-role {
+  border: 1px solid var(--border);
+}
+
+/* dashboard cards */
+html[data-theme="light"] .stat-card::after { opacity: .5; }
+html[data-theme="light"] .stat-icon { background: rgba(148, 163, 184, .15); }
+
+/* products & cart */
+html[data-theme="light"] .product-card { background: #fff; border-color: var(--border); }
+html[data-theme="light"] .product-card:hover:not(:disabled) {
+  border-color: var(--primary);
+  box-shadow: 0 8px 24px rgba(8, 145, 178, .12);
+}
+html[data-theme="light"] .qty-btn { background: #fff; color: var(--text); }
+html[data-theme="light"] .qty-btn:hover { background: var(--primary-light); color: var(--primary); }
+html[data-theme="light"] .cart-head, html[data-theme="light"] .cart-item,
+html[data-theme="light"] .cart-total { border-color: var(--border); }
+html[data-theme="light"] .ct-row.discount input { background: #fff; color: var(--text); border-color: var(--border-dark); }
+
+/* payment methods */
+html[data-theme="light"] .pay-method { background: #fff; border-color: var(--border-dark); }
+html[data-theme="light"] .pay-method:hover { border-color: var(--primary); }
+html[data-theme="light"] .pay-method.selected {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 14px rgba(8, 145, 178, .18);
+}
+html[data-theme="light"] .pm-icon { background: #f1f5f9; color: #64748b; }
+html[data-theme="light"] .pay-method.selected .pm-icon { background: #fff; color: var(--primary); }
+
+/* modals */
+html[data-theme="light"] .modal-overlay { background: rgba(15, 23, 42, .4); }
+html[data-theme="light"] .modal {
+  background: rgba(255, 255, 255, .96);
+  border-color: var(--border);
+  backdrop-filter: none;
+}
+html[data-theme="light"] .modal-foot {
+  background: #fff;
+  backdrop-filter: none;
+}
+
+/* toasts (tetap warna, lebih soft) */
+html[data-theme="light"] .toast { border-color: rgba(15, 23, 42, .1); }
+html[data-theme="light"] .toast.success { background: #059669; }
+html[data-theme="light"] .toast.error { background: #dc2626; }
+html[data-theme="light"] .toast.info { background: #1e3a8a; }

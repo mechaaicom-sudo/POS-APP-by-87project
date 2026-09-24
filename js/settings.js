@@ -8,6 +8,7 @@ const Settings = {
     document.getElementById('set-store-name').value = s.storeName || '';
     document.getElementById('set-store-address').value = s.storeAddress || '';
     document.getElementById('set-language').value = I18n.lang;
+    document.getElementById('set-theme').value = s.theme || 'dark';
 
     const usersCard = document.getElementById('users-card');
     usersCard.classList.toggle('hidden', !Auth.isOwner());
@@ -26,6 +27,7 @@ const Settings = {
       const name = document.getElementById('set-store-name').value.trim();
       const addr = document.getElementById('set-store-address').value.trim();
       const lang = document.getElementById('set-language').value;
+      const theme = document.getElementById('set-theme').value || 'dark';
       const s = DB.settings();
       if (!name) {
         UI.toast(I18n.t('common.required'), 'error');
@@ -34,9 +36,11 @@ const Settings = {
       s.storeName = name;
       s.storeAddress = addr;
       s.lang = lang;
+      s.theme = theme;
       DB.saveSettings(s);
       document.getElementById('lang-select').value = lang;
       I18n.setLang(lang);
+      App.applyTheme();
       App.refresh();
       UI.toast(I18n.t('common.saved'), 'success');
     };
