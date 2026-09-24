@@ -123,6 +123,29 @@ const steps = `
     const repHtml = document.getElementById('rep-stats').innerHTML;
     ok(repHtml.includes(I18n.t('exp.net')), '10) kartu Laba Bersih tampil di laporan shift');
 
+    /* ===== (4) CETAK STRUK: prioritas Bluetooth ESC/POS ===== */
+    // tanpa printer BT → fallback dialog cetak (window.print)
+    window.__printed = false;
+    window.print = () => { window.__printed = true; };
+    Receipt.print(trx);
+    await new Promise(r => setTimeout(r, 150));
+    ok(window.__printed === true, '11) tanpa printer BT → fallback cetak HTML (window.print)');
+
+    // printer BT terpasang → struk dikirim via ESC/POS (jalur sama dengan Tes Cetak)
+    const btLog = { sent: false, addr: null, lines: null };
+    window.Capacitor = { Plugins: { BluetoothEscpos: { print: async o => { btLog.sent = true; btLog.addr = o.address; btLog.lines = o.lines; } } } };
+    const printerBackup = DB.settings().bluetoothPrinter;
+    Bluetooth.savePrinter('AA:BB:CC:DD:EE:FF');
+    window.__printed = false;
+    Receipt.print(trx);
+    await new Promise(r => setTimeout(r, 150));
+    ok(btLog.sent && btLog.addr === 'AA:BB:CC:DD:EE:FF' &&
+       Array.isArray(btLog.lines) && btLog.lines.length > 0 &&
+       window.__printed === false,
+      '12) printer BT terpasang → struk via ESC/POS, TIDAK lewat dialog HTML');
+    const s = DB.settings(); s.bluetoothPrinter = printerBackup || null; DB.saveSettings(s);
+    delete window.Capacitor;
+
     window.__ts = R;
   })();
 `;

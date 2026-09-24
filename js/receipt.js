@@ -146,6 +146,23 @@ const Receipt = {
   },
 
   async print(trx) {
+    /* PRIORITAS 1 — printer Bluetooth ESC/POS (jalur yang SAMA dengan
+       "Tes Cetak" di Pengaturan). Kalau printer termal sudah diatur, struk
+       dikirim langsung ke printer 58mm — tanpa dialog. Inilah jalur yang
+       benar-benar mencetak di printer termal Bluetooth. */
+    if (Bluetooth.available() && Bluetooth.printerAddress()) {
+      try {
+        await Bluetooth.printReceipt(trx);
+        UI.toast(I18n.t('bt.sent'), 'success');
+        return;
+      } catch (e) {
+        UI.toast(I18n.t('bt.fail').replace('{err}', (e && e.message) || 'Bluetooth'), 'error');
+        return;
+      }
+    }
+
+    /* PRIORITAS 2 — dialog cetak HTML (plugin Android / window.print),
+       hanya dipakai kalau printer Bluetooth BELUM diatur. */
     const area = document.getElementById('print-area');
     area.innerHTML = this.build(trx);
     // delay singkat agar browser merender struk sebelum dialog cetak muncul
