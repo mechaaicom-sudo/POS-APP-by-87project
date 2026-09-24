@@ -12,7 +12,6 @@ android/.idea/
 android/captures/
 android/.externalNativeBuild/
 android/.cxx/
-*.apk
 *.aab
 
 # OS
