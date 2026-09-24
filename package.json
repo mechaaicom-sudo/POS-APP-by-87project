@@ -1,6 +1,6 @@
 {
   "name": "my-cash",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Aplikasi **Point of Sale** berbasis web sederhana. Semua data tersimpan di `localStorage` browser.",
   "main": "index.js",
   "scripts": {
