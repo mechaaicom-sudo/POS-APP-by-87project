@@ -195,6 +195,12 @@ const Cashier = {
     this.renderCart();
   },
 
+  /* ikon metode pembayaran (emoji) */
+  methodIcon(m) {
+    const icons = { cash: '💵', gopay: '🟢', ovo: '🟣', dana: '🔵', qris: '📱', bca: '🏦', kartu: '💳' };
+    return icons[m] || '💳';
+  },
+
   /* ---------- checkout ---------- */
   openCheckout() {
     if (!this.cart.length) return;
