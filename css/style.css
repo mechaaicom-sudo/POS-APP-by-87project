@@ -535,3 +535,10 @@ tbody tr:last-child td { border-bottom: none; }
   .receipt.r58 { border: none; box-shadow: none; }
   .receipt .r-cut { height: 8mm; } /* sisa kertas untuk pemotongan */
 }
+
+.modal-foot { position: sticky; bottom: 0; background: var(--surface); padding-top: 12px; }
+
+@media (max-width: 480px) {
+  .pay-method { padding: 6px 2px; font-size: 10.5px; }
+  .pm-icon { width: 28px; height: 28px; }
+}

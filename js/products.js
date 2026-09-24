@@ -10,7 +10,7 @@ const Products = {
 
   saveAll(products) {
     const now = Date.now();
-    products = products.map(p => p.updatedAt ? p : Object.assign({}, p, { updatedAt: now }));
+    products = products.map(p => Object.assign({}, p, { updatedAt: now }));
     DB.set('products', products);
   },
 

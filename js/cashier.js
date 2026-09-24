@@ -202,7 +202,7 @@ const Cashier = {
 
     const methods = ['cash', 'gopay', 'ovo', 'dana', 'qris', 'bca', 'kartu'];
     const methodBtns = methods.map(m =>
-      '<button type="button" class="pay-method" data-method="' + m + '"' + (m === 'cash' ? ' selected' : '') + '>' +
+      '<button type="button" class="pay-method' + (m === 'cash' ? ' selected' : '') + '" data-method="' + m + '">' +
       '<span class="pm-icon">' + this.methodIcon(m) + '</span>' +
       '<span>' + UI.esc(I18n.t('cash.method.' + m)) + '</span>' +
       '</button>'
@@ -260,7 +260,7 @@ const Cashier = {
     };
 
     cashEl.addEventListener('input', refresh);
-    cashEl.focus();
+    if (window.innerWidth > 768) cashEl.focus();
     refresh();
 
     form.querySelector('[data-xclose]').onclick = () => UI.closeModal();
@@ -306,7 +306,10 @@ const Cashier = {
     const products = Products.list();
     this.cart.forEach(c => {
       const p = products.find(x => x.id === c.id);
-      if (p) p.stock = Math.max(0, p.stock - c.qty);
+      if (p) {
+        p.stock = Math.max(0, p.stock - c.qty);
+        p.updatedAt = Date.now();
+      }
     });
     Products.saveAll(products);
 

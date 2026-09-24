@@ -129,3 +129,7 @@ const App = {
 
 /* Start the app */
 document.addEventListener('DOMContentLoaded', () => App.init());
+
+/* Error visibility: tampilkan JS error ke layar (toast) — berguna di HP */
+window.addEventListener('error', e => UI.toast('JS: ' + e.message, 'error'));
+window.addEventListener('unhandledrejection', e => UI.toast('Promise: ' + (e.reason && e.reason.message || e.reason), 'error'));
