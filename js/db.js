@@ -86,6 +86,8 @@ const DB = {
 
     this.set('transactions', []);
     this.set('shifts', []);
+    this.set('expenses', []);
+    this.set('stocklog', []);
     this.set('settings', { storeName: 'Kasir Pro', storeAddress: 'Jl. Contoh No. 1, Jakarta', lang: 'id', seq: 0 });
     this.set('session', null);
     this.set('seeded', true);

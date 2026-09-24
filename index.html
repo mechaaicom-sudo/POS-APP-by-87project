@@ -16,7 +16,7 @@
     </div>
     <h1 data-i18n="app.title">Kasir Pro</h1>
     <p class="login-sub" data-i18n="login.subtitle">Aplikasi kasir untuk toko Anda</p>
-    <p class="login-sub" style="margin-top:-6px;font-size:12px;color:#94a3b8;font-weight:600">v1.1.0 · 7 metode bayar · Training Mode</p>
+    <p class="login-sub" style="margin-top:-6px;font-size:12px;color:#94a3b8;font-weight:600">v1.2.0 · 7 metode bayar · Training Mode · Retur · Pengeluaran</p>
     <form id="login-form" autocomplete="off">
       <label class="field">
         <span data-i18n="login.username">Nama pengguna</span>
@@ -148,6 +148,26 @@
             <div id="products-empty" class="empty hidden" data-i18n="product.empty">Belum ada produk</div>
           </div>
         </div>
+
+        <!-- ===== STOCK LOG (riwayat stok masuk/penyesuaian) ===== -->
+        <div class="card" style="margin-top:18px">
+          <h3 class="card-title" data-i18n="product.stockLog">&#128230; Riwayat Stok</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="his.date">Waktu</th>
+                  <th data-i18n="product.name">Produk</th>
+                  <th data-i18n="product.stockType">Jenis</th>
+                  <th class="num" data-i18n="product.stockDelta">Perubahan</th>
+                  <th data-i18n="product.stockNote">Catatan</th>
+                </tr>
+              </thead>
+              <tbody id="stocklog-tbody"></tbody>
+            </table>
+            <div id="stocklog-empty" class="empty hidden" data-i18n="product.stockLogEmpty">Belum ada riwayat stok</div>
+          </div>
+        </div>
       </section>
 
       <!-- ===== HISTORY ===== -->
@@ -201,6 +221,46 @@
             <div id="reports-empty" class="empty hidden"></div>
           </div>
         </div>
+
+        <!-- ===== PENGELUARAN & LABA BERSIH ===== -->
+        <div class="card" style="margin-top:18px">
+          <div class="card-head">
+            <h3 class="card-title" data-i18n="exp.title">💰 Pengeluaran & Laba Bersih</h3>
+            <button class="btn btn-primary btn-sm" id="btn-toggle-exp">
+              <span data-i18n="exp.add">Tambah Pengeluaran</span>
+            </button>
+          </div>
+          <div class="form-grid hidden" id="exp-form">
+            <label class="field">
+              <span data-i18n="exp.note">Keterangan</span>
+              <input id="exp-note" class="input">
+            </label>
+            <label class="field">
+              <span data-i18n="exp.amount">Jumlah (Rp)</span>
+              <input id="exp-amount" class="input" type="number" min="0">
+            </label>
+            <button class="btn btn-primary" id="btn-save-exp">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              <span data-i18n="common.save">Simpan</span>
+            </button>
+          </div>
+          <div class="stats-grid" id="exp-stats" style="margin:14px 0 6px"></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="exp.date">Tanggal</th>
+                  <th data-i18n="exp.note">Keterangan</th>
+                  <th data-i18n="his.cashier">Oleh</th>
+                  <th class="num" data-i18n="exp.amount">Jumlah</th>
+                  <th class="num" data-i18n="common.actions">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="expenses-tbody"></tbody>
+            </table>
+            <div id="expenses-empty" class="empty hidden" data-i18n="exp.empty">Belum ada pengeluaran.</div>
+          </div>
+        </div>
       </section>
 
       <!-- ===== SETTINGS ===== -->
@@ -221,6 +281,13 @@
               <select id="set-language" class="select">
                 <option value="id">Bahasa Indonesia</option>
                 <option value="en">English</option>
+              </select>
+            </label>
+            <label class="field">
+              <span data-i18n="set.theme">Tema</span>
+              <select id="set-theme" class="select">
+                <option value="dark" data-i18n="set.themeDark">🌌 Futuristik Gelap</option>
+                <option value="light" data-i18n="set.themeLight">☀️ Terang</option>
               </select>
             </label>
           </div>
@@ -347,7 +414,7 @@
 <script src="js/bluetooth.js"></script>
 <script src="js/sync.js"></script>
 <script src="js/settings.js"></script>
-<script src="js/version-live.js"></script>
+<script src="js/update.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

@@ -292,6 +292,7 @@ const Cashier = {
     const trx = {
       id,
       date: now.toISOString(),
+      status: 'paid',          // 'paid' | 'refunded' (RETUR)
       items: this.cart.map(c => ({ id: c.id, name: c.name, price: c.price, qty: c.qty })),
       subtotal, discountPct: pct, discountAmount, total,
       cash, change: cash - total,

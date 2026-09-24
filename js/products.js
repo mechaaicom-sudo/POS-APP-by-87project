@@ -32,6 +32,7 @@ const Products = {
   render() {
     this.renderCategoryFilter();
     this.renderTable();
+    this.renderStockLog();
 
     const searchEl = document.getElementById('prod-search');
     searchEl.value = this.state.search;
@@ -57,6 +58,8 @@ const Products = {
         const id = btn.getAttribute('data-id');
         if (btn.getAttribute('data-action') === 'edit') this.openForm(id);
         if (btn.getAttribute('data-action') === 'delete') this.confirmDelete(id);
+        if (btn.getAttribute('data-action') === 'stockin') this.openStockIn(id);
+        if (btn.getAttribute('data-action') === 'adjust') this.openAdjust(id);
       });
     }
   },
@@ -98,7 +101,9 @@ const Products = {
     tbody.innerHTML = rows.map(p => {
       const editable = Auth.can('products');
       const actions = editable
-        ? '<button class="icon-btn" data-action="edit" data-id="' + UI.esc(p.id) + '" title="' + I18n.t('common.edit') + '">✏️</button> ' +
+        ? '<button class="icon-btn" data-action="stockin" data-id="' + UI.esc(p.id) + '" title="' + I18n.t('product.stockIn') + '">📥</button> ' +
+          '<button class="icon-btn" data-action="adjust" data-id="' + UI.esc(p.id) + '" title="' + I18n.t('product.stockAdjust') + '">⚖️</button> ' +
+          '<button class="icon-btn" data-action="edit" data-id="' + UI.esc(p.id) + '" title="' + I18n.t('common.edit') + '">✏️</button> ' +
           '<button class="icon-btn danger" data-action="delete" data-id="' + UI.esc(p.id) + '" title="' + I18n.t('common.delete') + '">🗑️</button>'
         : '<span class="muted">—</span>';
       return '' +
@@ -110,6 +115,116 @@ const Products = {
         '<td class="num">' + actions + '</td>' +
         '</tr>';
     }).join('');
+  },
+
+  /* ---------- stok masuk & penyesuaian ---------- */
+  logStock(entry) {
+    const log = DB.get('stocklog', []);
+    log.unshift(Object.assign({ id: 'STK-' + Date.now().toString(36).toUpperCase(), date: new Date().toISOString() }, entry));
+    DB.set('stocklog', log.slice(0, 200)); // batasi 200 entri terbaru
+  },
+
+  applyStock(id, qty, type, note) {
+    const products = this.list();
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+    const before = p.stock;
+    if (type === 'in') p.stock = Math.max(0, p.stock + qty);
+    else if (type === 'set') p.stock = Math.max(0, qty);
+    p.updatedAt = Date.now();
+    this.saveAll(products);
+    this.logStock({ productId: p.id, productName: p.name, type, qty: p.stock - before, note: note || '' });
+    this.renderTable();
+    this.renderStockLog();
+  },
+
+  openStockIn(id) {
+    const p = this.get(id);
+    if (!p) return;
+    const form = UI.modal(
+      '<div class="modal-head"><h3>📥 ' + I18n.t('product.stockIn') + '</h3>' +
+      '<button class="icon-btn" data-xclose>✕</button></div>' +
+      '<div class="modal-body">' +
+      '<p class="muted" style="font-size:13.5px;text-align:center">' + UI.esc(p.name) + '<br>' +
+      '<strong>' + I18n.t('product.stock') + ': ' + p.stock + '</strong></p>' +
+      '<label class="field"><span>' + I18n.t('product.stockQty') + ' *</span>' +
+      '<input id="so-qty" class="input" type="number" min="1" value="1"></label>' +
+      '<label class="field"><span>' + I18n.t('product.stockNote') + '</span>' +
+      '<input id="so-note" class="input" placeholder="' + I18n.t('product.stockNotePh') + '"></label>' +
+      '</div>' +
+      '<div class="modal-foot">' +
+      '<button class="btn btn-secondary" data-xno>' + I18n.t('common.cancel') + '</button>' +
+      '<button class="btn btn-primary" data-xsave>' + I18n.t('common.save') + '</button>' +
+      '</div>'
+    );
+    form.querySelector('[data-xclose]').onclick = () => UI.closeModal();
+    form.querySelector('[data-xno]').onclick = () => UI.closeModal();
+    form.querySelector('[data-xsave]').onclick = () => {
+      const qty = Math.floor(Number(form.querySelector('#so-qty').value));
+      if (!(qty > 0)) { UI.toast(I18n.t('product.stockQtyErr'), 'error'); return; }
+      this.applyStock(id, qty, 'in', form.querySelector('#so-note').value.trim());
+      UI.closeModal();
+      UI.toast(I18n.t('product.stockInDone'), 'success');
+    };
+  },
+
+  openAdjust(id) {
+    const p = this.get(id);
+    if (!p) return;
+    const form = UI.modal(
+      '<div class="modal-head"><h3>⚖️ ' + I18n.t('product.stockAdjust') + '</h3>' +
+      '<button class="icon-btn" data-xclose>✕</button></div>' +
+      '<div class="modal-body">' +
+      '<p class="muted" style="font-size:13.5px;text-align:center">' + UI.esc(p.name) + '<br>' +
+      '<strong>' + I18n.t('product.stock') + ' sekarang: ' + p.stock + '</strong></p>' +
+      '<label class="field"><span>' + I18n.t('product.stockNew') + ' *</span>' +
+      '<input id="ad-new" class="input" type="number" min="0" value="' + p.stock + '"></label>' +
+      '<label class="field"><span>' + I18n.t('product.stockNote') + '</span>' +
+      '<input id="ad-note" class="input" placeholder="' + I18n.t('product.stockAdjustPh') + '"></label>' +
+      '</div>' +
+      '<div class="modal-foot">' +
+      '<button class="btn btn-secondary" data-xno>' + I18n.t('common.cancel') + '</button>' +
+      '<button class="btn btn-primary" data-xsave>' + I18n.t('common.save') + '</button>' +
+      '</div>'
+    );
+    form.querySelector('[data-xclose]').onclick = () => UI.closeModal();
+    form.querySelector('[data-xno]').onclick = () => UI.closeModal();
+    form.querySelector('[data-xsave]').onclick = () => {
+      const v = Math.floor(Number(form.querySelector('#ad-new').value));
+      if (!(v >= 0)) { UI.toast(I18n.t('product.stockQtyErr'), 'error'); return; }
+      this.applyStock(id, v, 'set', form.querySelector('#ad-note').value.trim() || I18n.t('product.stockAdjustPh'));
+      UI.closeModal();
+      UI.toast(I18n.t('product.stockInDone'), 'success');
+    };
+  },
+
+  renderStockLog() {
+    const tbody = document.getElementById('stocklog-tbody');
+    const empty = document.getElementById('stocklog-empty');
+    if (!tbody) return;
+    const log = DB.get('stocklog', []);
+    if (!log.length) {
+      tbody.innerHTML = '';
+      if (empty) {
+        empty.classList.remove('hidden');
+        empty.textContent = I18n.t('product.stockLogEmpty');
+      }
+      return;
+    }
+    if (empty) empty.classList.add('hidden');
+    const typeLabel = {
+      in: '<span class="badge badge-ok">+' + I18n.t('product.stockTypeIn') + '</span>',
+      set: '<span class="badge badge-low">⚖️ ' + I18n.t('product.stockTypeSet') + '</span>'
+    };
+    tbody.innerHTML = log.map(l =>
+      '<tr>' +
+      '<td>' + UI.esc(UI.fmtDateTime(l.date)) + '</td>' +
+      '<td><strong>' + UI.esc(l.productName) + '</strong></td>' +
+      '<td>' + (typeLabel[l.type] || UI.esc(l.type)) + '</td>' +
+      '<td class="num">' + (l.qty > 0 ? '+' : '') + l.qty + '</td>' +
+      '<td>' + UI.esc(l.note || '—') + '</td>' +
+      '</tr>'
+    ).join('');
   },
 
   /* ---------- form modal ---------- */

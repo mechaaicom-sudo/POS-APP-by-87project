@@ -88,6 +88,9 @@ const Receipt = {
       '<div class="r-rule"></div>' +
 
       /* footer */
+      (trx.status === 'refunded'
+        ? '<div class="r-center" style="font-weight:700;letter-spacing:1px">*** ' + I18n.t('his.refunded') + ' ***</div>'
+        : '') +
       '<div class="r-center">' + I18n.t('rc.thanks') + '<br>' + I18n.t('rc.visit') + '</div>' +
 
       /* ruang pemotongan kertas */

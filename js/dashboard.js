@@ -7,20 +7,26 @@ const Dashboard = {
     const trxs = DB.get('transactions', []);
     const today = UI.todayStr();
 
+    /* transaksi yang dihitung di laporan: bukan transaksi pelatihan & bukan retur */
+    const real = t => t.training !== true && t.status !== 'refunded';
     const todayTrxs = trxs.filter(t => t.date.slice(0, 10) === today);
-    const revenueToday = todayTrxs.reduce((s, t) => s + t.total, 0);
+    const revenueToday = todayTrxs.filter(real).reduce((s, t) => s + t.total, 0);
+    const paidToday = todayTrxs.filter(real).length;
+    const expensesToday = DB.get('expenses', []).filter(e => String(e.date).slice(0, 10) === today).reduce((s, e) => s + e.amount, 0);
     const lowStock = products.filter(p => p.stock <= 5);
 
     // stats cards
     document.getElementById('dash-stats').innerHTML =
-      this.statCard('💵', 'violet', I18n.t('dash.revenueToday'), UI.money(revenueToday), todayTrxs.length + ' ' + I18n.t('dash.visits')) +
-      this.statCard('🧾', 'green', I18n.t('dash.trxToday'), String(todayTrxs.length), I18n.t('dash.visits')) +
+      this.statCard('💵', 'violet', I18n.t('dash.revenueToday'), UI.money(revenueToday), paidToday + ' ' + I18n.t('dash.visits')) +
+      this.statCard('🧾', 'green', I18n.t('dash.trxToday'), String(paidToday), I18n.t('dash.visits')) +
+      this.statCard('🛒', 'blue', I18n.t('dash.expToday'), UI.money(expensesToday), I18n.t('dash.expenses').toLowerCase()) +
+      this.statCard('💰', 'orange', I18n.t('dash.profitToday'), UI.money(revenueToday - expensesToday), I18n.t('dash.netHint')) +
       this.statCard('📦', 'blue', I18n.t('dash.totalProducts'), String(products.length), lowStock.length + ' ' + I18n.t('dash.lowStock').toLowerCase()) +
       this.statCard('⚠️', 'orange', I18n.t('dash.lowStock'), String(lowStock.length), this.translateLowStock(lowStock));
 
-    // top products
+    // top products (hanya transaksi asli, tanpa retur)
     const qtyMap = {};
-    trxs.forEach(t => t.items.forEach(i => {
+    trxs.filter(real).forEach(t => t.items.forEach(i => {
       if (!qtyMap[i.name]) qtyMap[i.name] = 0;
       qtyMap[i.name] += i.qty;
     }));
@@ -45,11 +51,12 @@ const Dashboard = {
           ).join('') + '</div>'
         : '<div class="empty">' + I18n.t('dash.noLowStock') + '</div>');
 
-    // recent transactions
+    // recent transactions (asli saja, tanpa pelatihan/retur)
+    const recent = trxs.filter(real).slice(0, 5);
     document.getElementById('dash-recent').innerHTML =
       '<h3 class="card-title">🕐 ' + I18n.t('dash.recentTrx') + '</h3>' +
-      (trxs.length
-        ? '<div class="dash-list">' + trxs.slice(0, 5).map(t =>
+      (recent.length
+        ? '<div class="dash-list">' + recent.map(t =>
             '<div class="dash-row">' +
             '<span><span class="name">' + UI.esc(t.id) + '</span><br><span class="meta">' + UI.esc(UI.fmtDateTime(t.date)) + '</span></span>' +
             '<span class="meta">' + UI.money(t.total) + '</span>' +
