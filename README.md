@@ -1,4 +1,4 @@
-# Kasir Pro — Aplikasi POS (Point of Sale)
+# Kasir Pro — Aplikasi POS (Point of Sale) by 87PROJECT
 
 Aplikasi **Point of Sale** berbasis web sederhana yang berjalan sepenuhnya di browser.
 Tidak perlu server atau instalasi database — semua data tersimpan di `localStorage` browser.
