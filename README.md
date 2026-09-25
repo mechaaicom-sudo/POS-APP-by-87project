@@ -119,3 +119,8 @@ dist/KasirPro-v1.0.0-release.apk                  # rilis (self-signed)
 - Tombol **Hapus Semua Data** terdapat di Pengaturan (hanya owner).
 - `www/` dan `android/` adalah hasil bundel dari sumber di root proyek; jalankan
   `npm run sync:www` setelah mengubah file web sebelum build APK.
+
+  thanks to:
+  ALLAH
+  Orang Tua
+  My Mine
