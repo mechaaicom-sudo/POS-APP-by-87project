@@ -344,5 +344,7 @@ const Cashier = {
       Receipt.print(trx);
     };
     form.querySelector('#btn-new-trx').onclick = () => UI.closeModal();
+    // cetak otomatis ke printer thermal 58mm saat payment berhasil
+    setTimeout(() => Receipt.print(trx), 180);
   }
 };

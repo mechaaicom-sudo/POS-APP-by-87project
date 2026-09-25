@@ -137,6 +137,7 @@ const steps = `
     const printerBackup = DB.settings().bluetoothPrinter;
     Bluetooth.savePrinter('AA:BB:CC:DD:EE:FF');
     window.__printed = false;
+    window.print = () => {}; // no-op: auto-print setTimeout tidak interfere
     Receipt.print(trx);
     await new Promise(r => setTimeout(r, 150));
     ok(btLog.sent && btLog.addr === 'AA:BB:CC:DD:EE:FF' &&

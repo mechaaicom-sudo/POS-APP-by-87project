@@ -180,6 +180,6 @@ const Receipt = {
         console.warn('Printer plugin gagal, fallback ke window.print():', e);
       }
     }
-    window.print();
+    try { window.print(); } catch (e) { console.warn('window.print gagal:', e); }
   }
 };
