@@ -5,8 +5,8 @@ const I18n = {
   lang: 'id',
   dicts: {
     id: {
-      'app.title': 'Kasir Pro',
-      'app.name': 'Kasir Pro',
+      'app.title': 'My Cash-POS APP',
+      'app.name': 'My Cash-POS APP',
       'login.subtitle': 'Aplikasi kasir untuk toko Anda',
       'login.username': 'Nama pengguna',
       'login.password': 'Kata sandi',
@@ -277,8 +277,8 @@ const I18n = {
       'bt.none': 'Atur printer Bluetooth dulu di menu Pengaturan.'
     },
     en: {
-      'app.title': 'Kasir Pro',
-      'app.name': 'Kasir Pro',
+      'app.title': 'My Cash-POS APP',
+      'app.name': 'My Cash-POS APP',
       'login.subtitle': 'Point of Sale for your store',
       'login.username': 'Username',
       'login.password': 'Password',

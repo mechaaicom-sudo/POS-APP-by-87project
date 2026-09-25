@@ -7,7 +7,7 @@ await new Promise(r=>setTimeout(r,3000));
 const { window } = dom; const { document } = window;
 let pass=0, fail=0; const ok=(c,m)=>{c?pass++:fail++; console.log((c?'  ✅ ':'  ❌ ')+m);};
 console.log('=== RENDER www/index.html (persis yang diinstall) ===');
-ok(document.title==='Kasir Pro'||document.title.includes('Kasir'), 'title: "'+document.title+'"');
+ok(document.title==='My Cash-POS APP', 'title: "'+document.title+'"');
 ok(!!document.querySelector('#app-login, #login-form, .login-box'), 'kontainer login ADA');
 ok(!!document.getElementById('login-username'), 'input username ADA');
 ok(!!document.getElementById('login-password'), 'input password ADA');

@@ -9,7 +9,7 @@
      request & TIDAK tampil apa-apa (app tetap offline tanpa error).
    ============================================================ */
 const Update = (() => {
-  const LOCAL_VERSION = '1.2.1'; // naikkan tiap build APK baru
+  const LOCAL_VERSION = '1.2.2'; // naikkan tiap build APK baru
 
   function release() {
     const s = DB.get('settings', {});

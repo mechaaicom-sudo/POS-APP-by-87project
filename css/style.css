@@ -1,5 +1,5 @@
 /* ============================================================
-   Kasir Pro — POS Application Stylesheet
+   My Cash-POS APP — POS Application Stylesheet
    ============================================================ */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -545,7 +545,7 @@ tbody tr:last-child td { border-bottom: none; }
 }
 
 /* ============================================================
-   FUTURISTIC THEME v2 — Kasir Pro
+   FUTURISTIC THEME v2 — My Cash-POS APP
    Dark space · glassmorphism · neon glow · animated grid
    (override di akhir file; semua class asli tetap dipakai)
    ============================================================ */
