@@ -345,6 +345,20 @@ const Cashier = {
     };
     form.querySelector('#btn-new-trx').onclick = () => UI.closeModal();
     // cetak otomatis ke printer thermal 58mm saat payment berhasil
-    setTimeout(() => Receipt.print(trx), 180);
+    // (pakai jalur SPP langsung, SAMA seperti Tes Cetak di Settings)
+    setTimeout(() => {
+      const addr = Bluetooth.printerAddress();
+      if (addr && Bluetooth.available()) {
+        const lines = Receipt.buildLines(trx);
+        Bluetooth.printLines(addr, lines).then(() => {
+          UI.toast(I18n.t('bt.sent'), 'success');
+        }).catch(e => {
+          console.warn('[AUTO-PRINT] gagal:', e);
+          UI.toast(I18n.t('bt.fail').replace('{err}', e.message || 'Bluetooth'), 'error');
+        });
+      } else {
+        console.warn('[AUTO-PRINT] BT belum tersedia / printer belum diatur');
+      }
+    }, 180);
   }
 };

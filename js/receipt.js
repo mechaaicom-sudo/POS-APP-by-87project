@@ -146,19 +146,24 @@ const Receipt = {
   },
 
   async print(trx) {
+    const btOk = Bluetooth.available() && Bluetooth.printerAddress();
+    console.log('[Receipt.print] btOk=', btOk, 'pluginBT=', !!Bluetooth.native());
     /* PRIORITAS 1 — printer Bluetooth SPP (jalur langsung ke
        printer termal 58mm tanpa dialog). Plugin @kduma-autoid/
        capacitor-bluetooth-printer mengirim ESC/POS langsung. */
-    if (Bluetooth.available() && Bluetooth.printerAddress()) {
+    if (btOk) {
+      console.log('[Receipt.print] jalur BT langsung');
       try {
         await Bluetooth.printReceipt(trx);
         UI.toast(I18n.t('bt.sent'), 'success');
         return;
       } catch (e) {
+        console.warn('[Receipt.print] BT gagal:', e);
         UI.toast(I18n.t('bt.fail').replace('{err}', e.message || 'Bluetooth'), 'error');
         return;
       }
     }
+    console.log('[Receipt.print] fallback dialog HTML/PrintManager');
 
     const area = document.getElementById('print-area');
     area.innerHTML = this.build(trx);

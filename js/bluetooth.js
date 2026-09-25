@@ -9,7 +9,9 @@ const Bluetooth = {
   },
 
   available() {
-    return !!this.native();
+    const ok = !!this.native();
+    console.log('[BT] available=', ok, 'Plugins.BluetoothPrinter=', !!this.native());
+    return ok;
   },
 
   async listDevices() {
@@ -20,7 +22,9 @@ const Bluetooth = {
   },
 
   printerAddress() {
-    return DB.settings().bluetoothPrinter || null;
+    const addr = DB.settings().bluetoothPrinter || null;
+    console.log('[BT] printerAddress=', addr);
+    return addr;
   },
 
   savePrinter(address) {
@@ -31,10 +35,12 @@ const Bluetooth = {
 
   async printLines(address, lines) {
     const n = this.native();
+    console.log('[BT] printLines addr=', address, 'n=', !!n, 'n.connectAndPrint=', typeof n.connectAndPrint);
     if (!n) throw new Error('plugin');
     const data = typeof lines === 'string'
       ? lines
       : lines.map(l => (l && l.s) || '').join('\n');
+    console.log('[BT] data length=', data.length);
     await n.connectAndPrint({ address, data });
   },
 
@@ -42,6 +48,7 @@ const Bluetooth = {
     const addr = this.printerAddress();
     if (!addr) throw new Error(I18n.t('bt.none'));
     const lines = Receipt.buildLines(trx);
+    console.log('[BT] printReceipt lines=', lines.length, 'addr=', addr);
     await this.printLines(addr, lines);
   }
 };
