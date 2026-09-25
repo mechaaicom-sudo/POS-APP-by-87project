@@ -202,6 +202,7 @@ body {
 .nav-item.active { background: var(--sidebar-active); color: #fff; box-shadow: 0 4px 12px rgba(79,70,229,.35); }
 
 .sidebar-footer { padding: 14px; border-top: 1px solid rgba(255,255,255,.08); display: flex; flex-direction: column; gap: 10px; }
+.app-credit { text-align: center; font-size: 11px; color: #94a3b8; letter-spacing: .5px; opacity: .85; }
 .user-chip { display: flex; align-items: center; gap: 10px; }
 .avatar {
   width: 36px; height: 36px; border-radius: 50%;
