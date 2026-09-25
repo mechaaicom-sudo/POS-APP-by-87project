@@ -72,6 +72,8 @@ const Settings = {
       document.getElementById('btn-bt-refresh').onclick = () => this.refreshBt();
       document.getElementById('btn-bt-save').onclick = () => this.saveBt();
       document.getElementById('btn-bt-test').onclick = () => this.testBt();
+      const btnSettings = document.getElementById('btn-bt-settings');
+      if (btnSettings) btnSettings.onclick = () => this.openBtSettings();
       this.refreshBt();
     }
 
@@ -90,6 +92,7 @@ const Settings = {
     const st = document.getElementById('bt-state');
     sel.innerHTML = '<option>' + I18n.t('common.loading') + '…</option>';
     try {
+      await Bluetooth.ensurePermission();
       const devices = await Bluetooth.listDevices();
       sel.innerHTML = devices.length
         ? devices.map(d => '<option value="' + UI.esc(d.address) + '">' + UI.esc(d.name || d.address) + '</option>').join('')
@@ -103,6 +106,12 @@ const Settings = {
       st.textContent = I18n.t('common.error') + ': ' + e.message;
       st.className = 'muted error';
     }
+  },
+
+  openBtSettings() {
+    Bluetooth.openSettings().catch(e => {
+      UI.toast(I18n.t('common.error') + ': ' + e.message, 'error');
+    });
   },
 
   saveBt() {
