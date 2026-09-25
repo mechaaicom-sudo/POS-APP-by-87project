@@ -146,30 +146,27 @@ const Receipt = {
   },
 
   async print(trx) {
-    /* PRIORITAS 1 — printer Bluetooth ESC/POS (jalur yang SAMA dengan
-       "Tes Cetak" di Pengaturan). Kalau printer termal sudah diatur, struk
-       dikirim langsung ke printer 58mm — tanpa dialog. Inilah jalur yang
-       benar-benar mencetak di printer termal Bluetooth. */
+    /* PRIORITAS 1 — printer Bluetooth SPP (jalur langsung ke
+       printer termal 58mm tanpa dialog). Plugin @kduma-autoid/
+       capacitor-bluetooth-printer mengirim ESC/POS langsung. */
     if (Bluetooth.available() && Bluetooth.printerAddress()) {
       try {
         await Bluetooth.printReceipt(trx);
         UI.toast(I18n.t('bt.sent'), 'success');
         return;
       } catch (e) {
-        UI.toast(I18n.t('bt.fail').replace('{err}', (e && e.message) || 'Bluetooth'), 'error');
+        UI.toast(I18n.t('bt.fail').replace('{err}', e.message || 'Bluetooth'), 'error');
         return;
       }
     }
 
-    /* PRIORITAS 2 — dialog cetak HTML (plugin Android / window.print),
-       hanya dipakai kalau printer Bluetooth BELUM diatur. */
     const area = document.getElementById('print-area');
     area.innerHTML = this.build(trx);
     // delay singkat agar browser merender struk sebelum dialog cetak muncul
     await new Promise(r => setTimeout(r, 100));
 
-    /* Di dalam aplikasi Android (Capacitor): pakai dialog cetak native.
-       window.print() tidak tersedia di Android WebView. */
+    /* PRIORITAS 2 — dialog cetak HTML (plugin @capgo/printer / window.print),
+       dipakai kalau printer Bluetooth BELUM diatur. */
     const PrinterNative = (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Printer);
     if (PrinterNative && typeof PrinterNative.printHtml === 'function') {
       const doc =

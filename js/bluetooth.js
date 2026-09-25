@@ -1,10 +1,11 @@
 /* ============================================================
    bluetooth.js — cetak struk langsung ke printer termal
-   Bluetooth (ESC/POS). Plugin native Android: BluetoothEscpos.
+   Bluetooth SPP (ESC/POS). Plugin native Android:
+   @kduma-autoid/capacitor-bluetooth-printer → "BluetoothPrinter"
    ============================================================ */
 const Bluetooth = {
   native() {
-    return (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.BluetoothEscpos) || null;
+    return (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.BluetoothPrinter) || null;
   },
 
   available() {
@@ -14,7 +15,7 @@ const Bluetooth = {
   async listDevices() {
     const n = this.native();
     if (!n) return [];
-    const r = await n.listDevices();
+    const r = await n.list();
     return (r && r.devices) || [];
   },
 
@@ -31,7 +32,10 @@ const Bluetooth = {
   async printLines(address, lines) {
     const n = this.native();
     if (!n) throw new Error('plugin');
-    await n.print({ address, lines });
+    const data = typeof lines === 'string'
+      ? lines
+      : lines.map(l => (l && l.s) || '').join('\n');
+    await n.connectAndPrint({ address, data });
   },
 
   async printReceipt(trx) {

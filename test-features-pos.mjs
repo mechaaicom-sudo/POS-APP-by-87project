@@ -131,9 +131,9 @@ const steps = `
     await new Promise(r => setTimeout(r, 150));
     ok(window.__printed === true, '11) tanpa printer BT → fallback cetak HTML (window.print)');
 
-    // printer BT terpasang → struk dikirim via ESC/POS (jalur sama dengan Tes Cetak)
+    // printer BT terpasang → struk dikirim via SPP (jalur sama dengan Tes Cetak)
     const btLog = { sent: false, addr: null, lines: null };
-    window.Capacitor = { Plugins: { BluetoothEscpos: { print: async o => { btLog.sent = true; btLog.addr = o.address; btLog.lines = o.lines; } } } };
+    window.Capacitor = { Plugins: { BluetoothPrinter: { connectAndPrint: async o => { btLog.sent = true; btLog.addr = o.address; btLog.lines = (typeof o.data === 'string') ? o.data.split('\\n') : o.data; } } } };
     const printerBackup = DB.settings().bluetoothPrinter;
     Bluetooth.savePrinter('AA:BB:CC:DD:EE:FF');
     window.__printed = false;
@@ -142,7 +142,7 @@ const steps = `
     ok(btLog.sent && btLog.addr === 'AA:BB:CC:DD:EE:FF' &&
        Array.isArray(btLog.lines) && btLog.lines.length > 0 &&
        window.__printed === false,
-      '12) printer BT terpasang → struk via ESC/POS, TIDAK lewat dialog HTML');
+      '12) printer BT terpasang → struk via SPP langsung, TIDAK lewat dialog HTML');
     const s = DB.settings(); s.bluetoothPrinter = printerBackup || null; DB.saveSettings(s);
     delete window.Capacitor;
 
