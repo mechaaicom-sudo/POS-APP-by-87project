@@ -121,6 +121,9 @@ dist/KasirPro-v1.0.0-release.apk                  # rilis (self-signed)
   `npm run sync:www` setelah mengubah file web sebelum build APK.
 
   thanks to:
+  
   ALLAH
+  
   Orang Tua
+  
   My Mine
