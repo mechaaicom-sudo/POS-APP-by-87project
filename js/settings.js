@@ -181,6 +181,11 @@ const Settings = {
     if (url) m.url = url;
     if (secret) m.secret = secret;
     if (!m.url || !m.secret) { UI.toast(I18n.t('common.required'), 'error'); return; }
+    // Pastikan URL deployment mengarah ke /exec (bukan /dev)
+    if (!/\/exec(\?|$)/.test(m.url)) {
+      UI.toast('URL harus berakhiran /exec (URL hasil Deploy Web App, bukan /dev)', 'error');
+      return;
+    }
     Sheet.saveMeta(m);
     UI.toast(I18n.t('common.saved'), 'success');
     this.renderSheetState();

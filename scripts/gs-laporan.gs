@@ -27,7 +27,7 @@
  * ============================================================ */
 
 /** GANTI DENGAN KUNCI MILIK ANDA (sama dengan di Pengaturan aplikasi) */
-var KUNCI_RAHASIA = 'GANTI-DENGAN-KUNCI-ANDA';
+var KUNCI_RAHASIA = '87PRO.CO';
 
 var TAB_TRANSAKSI = 'Transaksi';
 var TAB_PENJUALAN = 'Penjualan';

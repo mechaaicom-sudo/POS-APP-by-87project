@@ -55,33 +55,52 @@ const Sheet = (() => {
 
   /* ---------------- kirim 1 baris ---------------- */
 
+  const MAX_RETRY = 3;
+
+  /* Kirim 1 baris dengan timeout 15 detik dan retry hingga 3x.
+     Retry hanya untuk kegagalan jaringan/timeout/HTTP 5xx — error
+     validasi dari server (kunci salah, tab salah, dsb.) tidak di-retry. */
   async function postOne(entry) {
     const m = meta();
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
-    try {
-      /* PENTING: pakai 'text/plain' BUKAN 'application/json'.
-         Header application/json membuat browser mengirim CORS preflight (OPTIONS)
-         lebih dulu, dan endpoint Apps Script tidak menjawab preflight -> request
-         diblokir & muncul sebagai "Failed to fetch". Dengan text/plain ini
-         menjadi "simple request" (tanpa preflight) dan body JSON tetap terbaca
-         Apps Script lewat e.postData.contents. */
-      const res = await fetch(endpoint(), {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ secret: m.secret, tab: entry.tab, key: entry.key, row: entry.row }),
-        signal: ctrl.signal
-      });
-      const teks = await res.text();
-      let data = {};
-      try { data = JSON.parse(teks); } catch (_) { /*_balasan bukan JSON*/ }
-      if (!res.ok || !data || data.ok !== true) {
-        throw new Error((data && data.error) || ('HTTP ' + res.status + (teks ? ' — ' + teks.slice(0, 120) : '')));
+    let lastErr = null;
+    for (let attempt = 1; attempt <= MAX_RETRY; attempt++) {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+      try {
+        /* PENTING: pakai 'text/plain' BUKAN 'application/json'. */
+        const res = await fetch(endpoint(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ secret: m.secret, tab: entry.tab, key: entry.key, row: entry.row }),
+          signal: ctrl.signal
+        });
+        const teks = await res.text();
+        let data = {};
+        try { data = JSON.parse(teks); } catch (_) { /*_balasan bukan JSON*/ }
+        if (!res.ok || !data || data.ok !== true) {
+          const msg = (data && data.error) || ('HTTP ' + res.status + (teks ? ' — ' + teks.slice(0, 120) : ''));
+          // Error server yang bersifat permanen: jangan retry
+          if (data && data.error && !/HTTP 5\d\d/.test(msg)) throw new Error(msg);
+          throw Object.assign(new Error(msg), { retryable: res.status >= 500 });
+        }
+        return data;
+      } catch (e) {
+        lastErr = e;
+        const msg = String((e && e.message) || e || '');
+        const isAbort = e && e.name === 'AbortError';
+        const isNet = /Failed to fetch|NetworkError|Load failed|ERR_/i.test(msg);
+        const isServer = /HTTP 5\d\d/.test(msg) || (e && e.retryable);
+        const retryable = isAbort || isNet || isServer;
+        if (!retryable || attempt === MAX_RETRY) break;
+        await new Promise(r => setTimeout(r, 500 * attempt)); // jeda 0.5s, 1s
+      } finally {
+        clearTimeout(timer);
       }
-      return data;
-    } finally {
-      clearTimeout(timer);
     }
+    const msg = lastErr && lastErr.name === 'AbortError'
+      ? 'Timeout: server tidak merespons dalam ' + (TIMEOUT_MS / 1000) + ' detik (sudah ' + MAX_RETRY + 'x dicoba).'
+      : (lastErr && lastErr.message) || String(lastErr);
+    throw new Error(msg);
   }
 
   /* Kirim semua antrean berurutan. Berhenti saat gagal agar urut tetap benar.
